@@ -5,11 +5,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:travel_app_flutter/models/beach_model.dart';
 import 'package:travel_app_flutter/models/popular_model.dart';
 import 'package:travel_app_flutter/models/recommended_model.dart';
-
+import 'package:travel_app_flutter/screens/selected_place_screen.dart';
 import 'package:travel_app_flutter/widgets/bottom_navigation_bar.dart';
 import 'package:travel_app_flutter/widgets/custom_tab_indicator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'sign_in.dart';
 
 class HomeScreen extends StatefulWidget {
   /// Page Controller
@@ -45,7 +46,16 @@ class Screen extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(9.6),
                         color: Color(0x080a0928),
                       ),
-                      child: SvgPicture.asset('assets/svg/icon_drawer.svg'),
+                      // child: SvgPicture.asset('assets/svg/icon_drawer.svg'),
+                      child: IconButton(
+                        icon: Icon(Icons.logout),
+                        onPressed: () {
+                          Navigator.pushAndRemoveUntil(
+                              (context),
+                              MaterialPageRoute(builder: (context) => SignIn()),
+                              (route) => false);
+                        },
+                      ),
                     ),
                     Container(
                       height: 57.6,
@@ -127,7 +137,13 @@ class Screen extends State<HomeScreen> {
                   children: List.generate(
                     recommendations.length,
                     (int index) => GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => SelectedPlaceScreen(
+                                  recommendedModel: recommendations[index])),
+                        );
+                      },
                       child: Container(
                         margin: EdgeInsets.only(right: 28.8),
                         width: 333.6,
