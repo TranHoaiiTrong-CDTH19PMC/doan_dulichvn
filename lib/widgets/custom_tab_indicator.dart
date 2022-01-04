@@ -23,13 +23,19 @@ class _RRectanglePainterColor extends BoxPainter {
 
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {
+    // Custom Position
+    // cfg.size.width*0.5 to make it start from center
+    // subtract by 7.2 to make it really center
     final Offset customOffset = offset +
         Offset(cfg.size.width / 2 - (width * 0.5), cfg.size.height - weight);
 
+    //Custom Rectangle
     Rect myRect = customOffset & Size(width, weight);
 
+    // Custom Rounded Rectangle
     RRect myRRect = RRect.fromRectXY(myRect, weight, weight);
 
+    // Finally we have to draw
     canvas.drawRRect(myRRect, _paint);
   }
 }
