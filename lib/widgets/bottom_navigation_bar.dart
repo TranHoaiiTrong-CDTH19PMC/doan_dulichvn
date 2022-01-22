@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../screens/home_screen.dart';
+import '../screens/profile_screen.dart';
 
 class BottomNavigationBarTravel extends StatefulWidget {
   @override
@@ -14,9 +16,17 @@ class _BottomNavigationBarTravelState extends State<BottomNavigationBarTravel> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => tabs[_selectedIndex]));
     });
   }
 
+  final tabs = [
+    HomeScreen(),
+    Center(child: Text("Tim")),
+    Center(child: Text("Them")),
+    ProfileScreen(),
+  ];
   var bottomNavStyle =
       GoogleFonts.lato(fontSize: 12, fontWeight: FontWeight.w500);
 
@@ -36,7 +46,7 @@ class _BottomNavigationBarTravelState extends State<BottomNavigationBarTravel> {
             icon: _selectedIndex == 0
                 ? new SvgPicture.asset('assets/svg/icon_home_colored.svg')
                 : new SvgPicture.asset('assets/svg/icon_home.svg'),
-            label: 'Home'
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: _selectedIndex == 1
@@ -46,19 +56,13 @@ class _BottomNavigationBarTravelState extends State<BottomNavigationBarTravel> {
           ),
           BottomNavigationBarItem(
             icon: _selectedIndex == 2
-                ? new SvgPicture.asset('assets/svg/icon_plus_colored.svg')
-                : new SvgPicture.asset('assets/svg/icon_plus.svg'),
-            label: 'Plus',
-          ),
-          BottomNavigationBarItem(
-            icon: _selectedIndex == 3
                 ? new SvgPicture.asset(
                     'assets/svg/icon_notification_colored.svg')
                 : new SvgPicture.asset('assets/svg/icon_notification.svg'),
             label: 'Notification',
           ),
           BottomNavigationBarItem(
-            icon: _selectedIndex == 4
+            icon: _selectedIndex == 3
                 ? new SvgPicture.asset('assets/svg/icon_user_colored.svg')
                 : new SvgPicture.asset('assets/svg/icon_user.svg'),
             label: 'User',
