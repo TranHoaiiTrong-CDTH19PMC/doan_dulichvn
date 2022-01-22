@@ -26,10 +26,15 @@ class Screen extends State<HomeScreen> {
   final _pageController = PageController(viewportFraction: 0.877);
   Iterable s_hinh = [];
   Iterable s = [];
+
+  bool like = false;
   bool modeFind = false;
+  String soluotthich = "";
   bool isUpdate = true;
   Iterable ds_moinhat = [];
   late TextEditingController _controller;
+  String chiasethanhcong = "";
+
   void initState() {
     super.initState();
     _controller = TextEditingController();
@@ -137,7 +142,26 @@ class Screen extends State<HomeScreen> {
                         ),
                         child: SvgPicture.asset('assets/svg/icon-share.svg'),
                       ),
-                      onTap: () {},
+
+                      onTap: () {
+                        API(
+                                url: "http://10.0.2.2:8000/api/chiasebaiviet/" +
+                                    s.elementAt(i)["id"].toString())
+                            .getDataString()
+                            .then((value) {
+                          chiasethanhcong = value;
+                          print(value);
+
+                          setState(() {
+                            Fluttertoast.showToast(msg: "Chia sẻ thành công");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()));
+                          });
+                        });
+                      },
+
                     )),
                   ],
                 ),
@@ -261,6 +285,469 @@ class Screen extends State<HomeScreen> {
       );
     }
 
+
+//chi tiết trang mới nhất
+    ct_moinhat(int i) {
+      return Container(
+        child: Stack(
+          children: <Widget>[
+            /// PageView for Image
+            PageView(
+              controller: _pageController,
+              scrollDirection: Axis.horizontal,
+              children: List.generate(
+                ds_moinhat.elementAt(i)["images"].toString().length,
+                (int index) => Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: CachedNetworkImageProvider(
+                          ds_moinhat.elementAt(i)["images"].toString()),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            /// Custom Button
+            SafeArea(
+              child: Container(
+                height: 57.6,
+                margin: EdgeInsets.only(top: 28.8, left: 28.8, right: 28.8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        height: 57.6,
+                        width: 57.6,
+                        padding: EdgeInsets.all(18),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(9.6),
+                          color: Color(0x10000000),
+                        ),
+                        child:
+                            SvgPicture.asset('assets/svg/icon_left_arrow.svg'),
+                      ),
+                    ),
+                    GestureDetector(
+                      child: Container(
+                        height: 57.6,
+                        width: 57.6,
+                        padding: EdgeInsets.all(18),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(9.6),
+                          color: Color(0x10000000),
+                        ),
+                        child: SvgPicture.asset(isFavorite
+                            ? 'assets/svg/icon_heart_fill_red.svg'
+                            : 'assets/svg/icon_heart_fill.svg'),
+                      ),
+                      onTap: () {
+                        print('click => $isFavorite');
+                        setState(() {
+                          API(
+                                  url: "http://10.0.2.2:8000/api/soluotthich/" +
+                                      s_hinh.elementAt(i)["id"].toString())
+                              .getDataString()
+                              .then((value) {
+                            soluotthich = value;
+                            print(value);
+                            isUpdate = false;
+                            setState(() {});
+                          });
+                          isFavorite = !isFavorite;
+                          print('click => $isFavorite');
+                        });
+                      },
+                    ),
+                    Container(
+                        child: GestureDetector(
+                      child: Container(
+                        height: 57.6,
+                        width: 57.6,
+                        padding: EdgeInsets.all(18),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(9.6),
+                          color: Color(0x10000000),
+                        ),
+                        child: SvgPicture.asset('assets/svg/icon-share.svg'),
+                      ),
+                      onTap: () {
+                        API(
+                                url: "http://10.0.2.2:8000/api/chiasebaiviet/" +
+                                    ds_moinhat.elementAt(i)["id"].toString())
+                            .getDataString()
+                            .then((value) {
+                          chiasethanhcong = value;
+                          print(value);
+
+                          setState(() {
+                            Fluttertoast.showToast(msg: "Chia sẻ thành công");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()));
+                          });
+                        });
+                      },
+                    )),
+                  ],
+                ),
+              ),
+            ),
+
+            /// Content
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * 0.4,
+                    maxHeight: MediaQuery.of(context).size.height * 0.5),
+                padding: EdgeInsets.only(left: 28.8, bottom: 48, right: 28.8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    ///tag line
+                    Padding(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Stack(
+                          children: <Widget>[
+                            Text(
+                              ds_moinhat.elementAt(i)["tagLine"].toString(),
+                              maxLines: 2,
+                              overflow: TextOverflow.fade,
+                              style: GoogleFonts.playfairDisplay(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w700,
+                                  foreground: Paint()
+                                    ..style = PaintingStyle.stroke
+                                    ..strokeWidth = 6
+                                    ..color = Colors.black),
+                            ),
+                            Text(
+                              ds_moinhat.elementAt(i)["tagLine"].toString(),
+                              maxLines: 2,
+                              overflow: TextOverflow.fade,
+                              style: GoogleFonts.playfairDisplay(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        )),
+
+                    ///description
+                    Padding(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Stack(
+                          children: <Widget>[
+                            Text(
+                              ds_moinhat.elementAt(i)["description"].toString(),
+                              maxLines: 3,
+                              overflow: TextOverflow.fade,
+                              style: GoogleFonts.lato(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  foreground: Paint()
+                                    ..style = PaintingStyle.stroke
+                                    ..strokeWidth = 3
+                                    ..color = Colors.black),
+                            ),
+                            Text(
+                              ds_moinhat.elementAt(i)["description"].toString(),
+                              maxLines: 3,
+                              overflow: TextOverflow.fade,
+                              style: GoogleFonts.lato(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
+                            ),
+                          ],
+                        )),
+                    SizedBox(
+                      height: 40,
+                    ),
+
+                    /// Đi ngay
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                          ),
+                        ),
+                        Container(
+                            height: 62.4,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(9.6),
+                                color: Colors.white),
+                            child: ElevatedButton(
+                              onPressed: _ggmap,
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: Container(
+                                  padding:
+                                      EdgeInsets.only(left: 28.8, right: 28.8),
+                                  child: FittedBox(
+                                    child: Text(
+                                      'Đi ngay >>',
+                                      style: GoogleFonts.lato(
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
+//trang chi tiet chinh
+    detailsSite(int i) {
+      return Container(
+        child: Stack(
+          children: <Widget>[
+            /// PageView for Image
+            PageView(
+              controller: _pageController,
+              scrollDirection: Axis.horizontal,
+              children: List.generate(
+                s_hinh.elementAt(i)["images"].toString().length,
+                (int index) => Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: CachedNetworkImageProvider(
+                          s_hinh.elementAt(i)["images"].toString()),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            /// Custom Button
+            SafeArea(
+              child: Container(
+                height: 57.6,
+                margin: EdgeInsets.only(top: 28.8, left: 28.8, right: 28.8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        height: 57.6,
+                        width: 57.6,
+                        padding: EdgeInsets.all(18),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(9.6),
+                          color: Color(0x10000000),
+                        ),
+                        child:
+                            SvgPicture.asset('assets/svg/icon_left_arrow.svg'),
+                      ),
+                    ),
+                    GestureDetector(
+                      child: Container(
+                        height: 57.6,
+                        width: 57.6,
+                        padding: EdgeInsets.all(18),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(9.6),
+                          color: Color(0x10000000),
+                        ),
+                        child: SvgPicture.asset(isFavorite
+                            ? 'assets/svg/icon_heart_fill_red.svg'
+                            : 'assets/svg/icon_heart_fill.svg'),
+                      ),
+                      onTap: () {
+                        print('click => $isFavorite');
+                        setState(() {
+                          API(
+                                  url: "http://10.0.2.2:8000/api/soluotthich/" +
+                                      s_hinh.elementAt(i)["id"].toString())
+                              .getDataString()
+                              .then((value) {
+                            soluotthich = value;
+                            print(value);
+                            isUpdate = false;
+                            setState(() {});
+                          });
+                          isFavorite = !isFavorite;
+                          print('click => $isFavorite');
+                        });
+                      },
+                    ),
+                    Container(
+                        child: GestureDetector(
+                      child: Container(
+                        height: 57.6,
+                        width: 57.6,
+                        padding: EdgeInsets.all(18),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(9.6),
+                          color: Color(0x10000000),
+                        ),
+                        child: SvgPicture.asset('assets/svg/icon-share.svg'),
+                      ),
+                      onTap: () {
+                        API(
+                                url: "http://10.0.2.2:8000/api/chiasebaiviet/" +
+                                    s_hinh.elementAt(i)["id"].toString())
+                            .getDataString()
+                            .then((value) {
+                          chiasethanhcong = value;
+                          print(value);
+
+                          setState(() {
+                            Fluttertoast.showToast(msg: "Chia sẻ thành công");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()));
+                          });
+                        });
+                      },
+                    )),
+                  ],
+                ),
+              ),
+            ),
+
+            /// Content
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * 0.4,
+                    maxHeight: MediaQuery.of(context).size.height * 0.5),
+                padding: EdgeInsets.only(left: 28.8, bottom: 48, right: 28.8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    ///tag line
+                    Padding(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Stack(
+                          children: <Widget>[
+                            Text(
+                              s_hinh.elementAt(i)["tagLine"].toString(),
+                              maxLines: 2,
+                              overflow: TextOverflow.fade,
+                              style: GoogleFonts.playfairDisplay(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w700,
+                                  foreground: Paint()
+                                    ..style = PaintingStyle.stroke
+                                    ..strokeWidth = 6
+                                    ..color = Colors.black),
+                            ),
+                            Text(
+                              s_hinh.elementAt(i)["tagLine"].toString(),
+                              maxLines: 2,
+                              overflow: TextOverflow.fade,
+                              style: GoogleFonts.playfairDisplay(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        )),
+
+                    ///description
+                    Padding(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Stack(
+                          children: <Widget>[
+                            Text(
+                              s_hinh.elementAt(i)["description"].toString(),
+                              maxLines: 3,
+                              overflow: TextOverflow.fade,
+                              style: GoogleFonts.lato(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  foreground: Paint()
+                                    ..style = PaintingStyle.stroke
+                                    ..strokeWidth = 3
+                                    ..color = Colors.black),
+                            ),
+                            Text(
+                              s_hinh.elementAt(i)["description"].toString(),
+                              maxLines: 3,
+                              overflow: TextOverflow.fade,
+                              style: GoogleFonts.lato(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
+                            ),
+                          ],
+                        )),
+                    SizedBox(
+                      height: 40,
+                    ),
+
+                    /// Đi ngay
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                          ),
+                        ),
+                        Container(
+                            height: 62.4,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(9.6),
+                                color: Colors.white),
+                            child: ElevatedButton(
+                              onPressed: _ggmap,
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: Container(
+                                  padding:
+                                      EdgeInsets.only(left: 28.8, right: 28.8),
+                                  child: FittedBox(
+                                    child: Text(
+                                      'Đi ngay >>',
+                                      style: GoogleFonts.lato(
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
     Widget trangtimkiem() {
       return Scaffold(
         bottomNavigationBar: BottomNavigationBarTravel(),
@@ -275,7 +762,7 @@ class Screen extends State<HomeScreen> {
                 setState(
                   () {
                     String text = _controller.text;
-
+\
                     if (_controller.text != "") {
                       modeFind = true;
                       API(
@@ -313,6 +800,7 @@ class Screen extends State<HomeScreen> {
                 hintText: "Search",
               ),
             ),
+
             Container(
               height: 57.6,
               margin: EdgeInsets.only(top: 28.8, left: 28.8, right: 28.8),
@@ -342,6 +830,7 @@ class Screen extends State<HomeScreen> {
                 ],
               ),
             ),
+
 
             /// Text Widget for Title
             Padding(
@@ -571,6 +1060,7 @@ class Screen extends State<HomeScreen> {
       );
     }
 
+
     Widget Trangmoinhat() {
       return Scaffold(
         bottomNavigationBar: BottomNavigationBarTravel(),
@@ -641,7 +1131,14 @@ class Screen extends State<HomeScreen> {
                 children: List.generate(
                   s_hinh.length,
                   (int index) => GestureDetector(
-                    onTap: () {},
+
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => ct_moinhat(index)),
+                      );
+                    },
+
                     child: Container(
                       margin: EdgeInsets.only(right: 28.8),
                       width: 333.6,
@@ -922,7 +1419,14 @@ class Screen extends State<HomeScreen> {
                   children: List.generate(
                     s_hinh.length,
                     (int index) => GestureDetector(
-                      onTap: () {},
+
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => detailsSite(index)),
+                        );
+                      },
+
                       child: Container(
                         margin: EdgeInsets.only(right: 28.8),
                         width: 333.6,

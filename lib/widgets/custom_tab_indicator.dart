@@ -1,41 +1,43 @@
-import 'package:flutter/material.dart';
 
-class RoundedRectangleTabIndicator extends Decoration {
-  final BoxPainter _painter;
+// import 'package:flutter/material.dart';
 
-  RoundedRectangleTabIndicator(
-      {@required Color color, @required double weight, @required double width})
-      : _painter = _RRectanglePainterColor(color, weight, width);
+// class RoundedRectangleTabIndicator extends Decoration {
+//   final BoxPainter _painter;
 
-  @override
-  BoxPainter createBoxPainter([onChanged]) => _painter;
-}
+//   RoundedRectangleTabIndicator(
+//       {@required Color color, @required double weight, @required double width})
+//       : _painter = _RRectanglePainterColor(color, weight, width);
 
-class _RRectanglePainterColor extends BoxPainter {
-  final Paint _paint;
-  final double weight;
-  final double width;
+//   @override
+//   BoxPainter createBoxPainter([onChanged]) => _painter;
+// }
 
-  _RRectanglePainterColor(Color color, this.weight, this.width)
-      : _paint = Paint()
-          ..color = color
-          ..isAntiAlias = true;
+// class _RRectanglePainterColor extends BoxPainter {
+//   final Paint _paint;
+//   final double weight;
+//   final double width;
 
-  @override
-  void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {
-    // Custom Position
-    // cfg.size.width*0.5 to make it start from center
-    // subtract by 7.2 to make it really center
-    final Offset customOffset = offset +
-        Offset(cfg.size.width / 2 - (width * 0.5), cfg.size.height - weight);
+//   _RRectanglePainterColor(Color color, this.weight, this.width)
+//       : _paint = Paint()
+//           ..color = color
+//           ..isAntiAlias = true;
 
-    //Custom Rectangle
-    Rect myRect = customOffset & Size(width, weight);
+//   @override
+//   void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {
+//     // Custom Position
+//     // cfg.size.width*0.5 to make it start from center
+//     // subtract by 7.2 to make it really center
+//     final Offset customOffset = offset +
+//         Offset(cfg.size.width / 2 - (width * 0.5), cfg.size.height - weight);
 
-    // Custom Rounded Rectangle
-    RRect myRRect = RRect.fromRectXY(myRect, weight, weight);
+//     //Custom Rectangle
+//     Rect myRect = customOffset & Size(width, weight);
 
-    // Finally we have to draw
-    canvas.drawRRect(myRRect, _paint);
-  }
-}
+//     // Custom Rounded Rectangle
+//     RRect myRRect = RRect.fromRectXY(myRect, weight, weight);
+
+//     // Finally we have to draw
+//     canvas.drawRRect(myRRect, _paint);
+//   }
+// }
+

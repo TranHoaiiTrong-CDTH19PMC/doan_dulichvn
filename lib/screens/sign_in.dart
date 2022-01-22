@@ -112,7 +112,19 @@ class InScreen extends State<SignIn> {
 
                       setState(() {
                         if (dangnhap == "duoc") {
-                          
+
+                          API(
+                                  url:
+                                      "http://10.0.2.2:8000/api/luutrangthai/" +
+                                          _email.text +
+                                          "/" +
+                                          _password.text)
+                              .getDataString()
+                              .then((value) {
+                            print(value);
+                            setState(() {});
+                          });
+
                           Fluttertoast.showToast(msg: "Đăng nhập thành công");
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
