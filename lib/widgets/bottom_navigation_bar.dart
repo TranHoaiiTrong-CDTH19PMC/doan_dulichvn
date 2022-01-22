@@ -26,6 +26,7 @@ class _BottomNavigationBarTravelState extends State<BottomNavigationBarTravel> {
     Center(child: Text("Tim")),
     Center(child: Text("Them")),
     ProfileScreen(),
+
   ];
   var bottomNavStyle =
       GoogleFonts.lato(fontSize: 12, fontWeight: FontWeight.w500);

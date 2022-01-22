@@ -26,6 +26,7 @@ class Screen extends State<HomeScreen> {
   final _pageController = PageController(viewportFraction: 0.877);
   Iterable s_hinh = [];
   Iterable s = [];
+
   bool like = false;
   bool modeFind = false;
   String soluotthich = "";
@@ -33,6 +34,7 @@ class Screen extends State<HomeScreen> {
   Iterable ds_moinhat = [];
   late TextEditingController _controller;
   String chiasethanhcong = "";
+
   void initState() {
     super.initState();
     _controller = TextEditingController();
@@ -140,6 +142,7 @@ class Screen extends State<HomeScreen> {
                         ),
                         child: SvgPicture.asset('assets/svg/icon-share.svg'),
                       ),
+
                       onTap: () {
                         API(
                                 url: "http://10.0.2.2:8000/api/chiasebaiviet/" +
@@ -158,6 +161,7 @@ class Screen extends State<HomeScreen> {
                           });
                         });
                       },
+
                     )),
                   ],
                 ),
@@ -280,6 +284,7 @@ class Screen extends State<HomeScreen> {
         ),
       );
     }
+
 
 //chi tiết trang mới nhất
     ct_moinhat(int i) {
@@ -757,11 +762,7 @@ class Screen extends State<HomeScreen> {
                 setState(
                   () {
                     String text = _controller.text;
-                    // if (_controller.text == "" || _controller.text == null) {
-                    //   modeFind = false;
-                    //   s = s_hinh;
-                    //   setState(() {});
-                    // }
+\
                     if (_controller.text != "") {
                       modeFind = true;
                       API(
@@ -799,6 +800,37 @@ class Screen extends State<HomeScreen> {
                 hintText: "Search",
               ),
             ),
+
+            Container(
+              height: 57.6,
+              margin: EdgeInsets.only(top: 28.8, left: 28.8, right: 28.8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    height: 57.6,
+                    width: 57.6,
+                    padding: EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(9.6),
+                      color: Color(0x080a0928),
+                    ),
+                    child: SvgPicture.asset('assets/svg/icon_drawer.svg'),
+                  ),
+                  Container(
+                    height: 57.6,
+                    width: 57.6,
+                    padding: EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(9.6),
+                      color: Color(0x080a0928),
+                    ),
+                    child: SvgPicture.asset('assets/svg/icon_search.svg'),
+                  )
+                ],
+              ),
+            ),
+
 
             /// Text Widget for Title
             Padding(
@@ -1028,7 +1060,6 @@ class Screen extends State<HomeScreen> {
       );
     }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     Widget Trangmoinhat() {
       return Scaffold(
@@ -1100,12 +1131,14 @@ class Screen extends State<HomeScreen> {
                 children: List.generate(
                   s_hinh.length,
                   (int index) => GestureDetector(
+
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) => ct_moinhat(index)),
                       );
                     },
+
                     child: Container(
                       margin: EdgeInsets.only(right: 28.8),
                       width: 333.6,
@@ -1386,12 +1419,14 @@ class Screen extends State<HomeScreen> {
                   children: List.generate(
                     s_hinh.length,
                     (int index) => GestureDetector(
+
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (context) => detailsSite(index)),
                         );
                       },
+
                       child: Container(
                         margin: EdgeInsets.only(right: 28.8),
                         width: 333.6,
